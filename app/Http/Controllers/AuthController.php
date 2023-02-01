@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Persona;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -13,22 +15,33 @@ class AuthController extends Controller
         $this->validate($request, [
             'nombres' => 'required|string',
             'apellidos' => 'required',
-            'usuario' => 'required|unique:users',
+            'documento' => 'required|unique:users',
             'password' => 'required|string',
+            'type'     => 'required|in:STUDENT,DOCENTE',
         ]);
 
+        DB::beginTransaction();
         try {
-            $data = User::create([
+            $persona = Persona::create([
                 'nombres' => $request->get('nombres'),
                 'apellidos' => $request->get('apellidos'),
-                'usuario' => $request->get('usuario'),
-                'password' => app('hash')->make($request->get('password'))
+                'tipo'      => $request->get('type'),
+                'documento' => $request->get('documento')
             ]);
+
+            $usuario = User::create([
+                "password" =>  app('hash')->make($request->get('password')),
+                "documento" => $request->get('documento')
+            ]);
+            $persona->usuario()->associate($usuario);
+
+            DB::commit();
             return response()->json([
-                "user" => $data,
+                "user" => $persona,
                 "message" => "Usuario creado con exito",
             ], 201);
         } catch (\Throwable $th) {
+            DB::rollBack();
             return response()->json(['message' => $th->getMessage()], 409);
         }
     }
@@ -36,22 +49,21 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $this->validate($request, [
-            'usuario' => 'required|string',
+            'documento' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        $credentials = $request->only(['usuario','password']);
+        $credentials = $request->only(['documento', 'password']);
         $token = Auth::setTTL(7200)->attempt($credentials);
-        if(!$token) {
+        if (!$token) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         $user = Auth::user();
-
         return response()->json([
             "token"         => $token,
-            'username'      => $user->usuario0,
-            'full_name'      => $user->nombres. ' ' . $user->apellidos,
+            'username'      => $user->documento,
+            'full_name'      => $user->persona->nombres . ' ' . $user->persona->apellidos,
             "expires_in"    => Auth::factory()->getTTL()
         ],  200);
     }
