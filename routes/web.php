@@ -17,6 +17,15 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+$router->group(['prefix' => 'api'], function() use ($router) {
+    $router->group(['prefix' => 'materias'], function() use ($router) {
+        $router->post('/create', 'MateriaController@store');
+        $router->get('/{id}', 'MateriaController@show');
+        $router->put('/{id}', 'MateriaController@update');
+        $router->post('/create', 'MateriaController@store');
+    });
+});
+
 $router->post('login', 'AuthController@login');
 $router->post('register', 'AuthController@register');
 $router->get('logout', 'AuthController@logout');
