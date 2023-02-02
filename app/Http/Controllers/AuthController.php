@@ -57,7 +57,7 @@ class AuthController extends Controller
         $credentials = $request->only(['documento', 'password']);
         $token = Auth::setTTL(7200)->attempt($credentials);
         if (!$token) {
-            return response()->json(['message' => 'El usuario o contraseña no es la corecta'], 401);
+            return response()->json(['message' => 'El usuario o contraseña no es la correcta'], 401);
         }
 
         $user = Auth::user();

@@ -18,6 +18,10 @@ $router->get('/', function () use ($router) {
 });
 
 $router->group(['prefix' => 'api'], function() use ($router) {
+    $router->post('login', 'AuthController@login');
+    $router->post('register', 'AuthController@register');
+    $router->get('logout', 'AuthController@logout');
+    
     $router->group(['prefix' => 'materias'], function() use ($router) {        
         // administrar los estudiantes por las materias
         $router->get('/search', 'MateriaController@buscarEstudiante');
@@ -34,7 +38,3 @@ $router->group(['prefix' => 'api'], function() use ($router) {
         $router->get('/{documento}', 'EstudianteController@show');
     });
 });
-
-$router->post('login', 'AuthController@login');
-$router->post('register', 'AuthController@register');
-$router->get('logout', 'AuthController@logout');

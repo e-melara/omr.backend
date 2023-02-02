@@ -41,14 +41,21 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $perfil = $this->perfil;
         $roles = array();
+        $idsRoles = array();
         foreach ($perfil->roles as $value) {
             array_push($roles, $value->nombre);
+            if(!in_array($value->modulo_id, $idsRoles)) {
+                array_push($idsRoles, $value->modulo_id);
+            }
         }
+
+        $modulos = Modulo::whereIn("id", $idsRoles)->select('short_name')->get();
 
         return [
             "id"        => $this->id,
             "roles"     => $roles,
             "perfil"    => $perfil->nombre,
+            "modulos"   => $modulos
         ];
     }
 
