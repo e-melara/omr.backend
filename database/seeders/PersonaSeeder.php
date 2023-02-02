@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Persona;
 use Illuminate\Database\Seeder;
 
 class PersonaSeeder extends Seeder
@@ -14,6 +14,22 @@ class PersonaSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Persona::create([
+            "nombres" => "Edwin",
+            "apellidos" => "Melara Landaverde",
+            "documento" => '042998540'
+        ]);
+
+        Persona::create([
+            "nombres" => "Erika del Rosario",
+            "apellidos" => "Ventura Rafael",
+            "documento" => '052106008'
+        ]);
+
+        Persona::create([
+            "nombres" => "Edwin",
+            "apellidos" => "Melara Landaverde",
+            "documento" => 'ML012023'
+        ]);
     }
 }

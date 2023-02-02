@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('notas', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
+            $table->string('nombre', 25);
             $table->decimal('porcentaje',  2, 2);
             $table->timestamps();
         });

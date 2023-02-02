@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('personas', function (Blueprint $table) {     
-            $table->string('documento', 20)->primary();
-            $table->string('nombres', 50);
-            $table->string('apellidos', 50);
+        Schema::create('rols', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('nombre', 100);
             $table->timestamps();
         });
     }
@@ -28,8 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('personas', function (Blueprint $table) {
-            Schema::dropIfExists('personas');
-        });
+        Schema::dropIfExists('rols');
     }
 };

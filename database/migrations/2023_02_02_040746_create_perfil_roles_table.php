@@ -13,9 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('perfils', function (Blueprint $table) {
+        Schema::create('perfils_rols', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nombre', 50);
+
+            $table->unsignedBigInteger('perfil_id');
+            $table->foreign('perfil_id')->references('id')->on('perfils')->onDelete('cascade');
+
+            $table->unsignedBigInteger('rol_id');
+            $table->foreign('rol_id')->references('id')->on('rols')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('perfils');
+        Schema::dropIfExists('perfils_rols');
     }
 };

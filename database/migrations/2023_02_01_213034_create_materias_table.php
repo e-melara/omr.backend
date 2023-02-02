@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('materias', function (Blueprint $table) {
             $table->bigIncrements('id');  
-            $table->string('nombre');
-            $table->string('codigo');
+            $table->string('nombre', 50);
+            $table->string('codigo', 10);
             $table->timestamps();
         });
     }

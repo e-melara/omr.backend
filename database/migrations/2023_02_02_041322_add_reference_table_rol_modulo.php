@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('personas', function (Blueprint $table) {     
-            $table->string('documento', 20)->primary();
-            $table->string('nombres', 50);
-            $table->string('apellidos', 50);
-            $table->timestamps();
+        Schema::table('rols', function (Blueprint $table) {
+            $table->unsignedBigInteger('modulo_id');
+            $table->foreign('modulo_id')->references('id')->on('modulos')->onDelete('cascade');
         });
     }
 
@@ -28,8 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('personas', function (Blueprint $table) {
-            Schema::dropIfExists('personas');
+        Schema::table('rols', function (Blueprint $table) {
+            $table->dropForeign(['modulo_id']);
+            $table->dropColumn('modulo_id');
         });
     }
 };

@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('personas', function (Blueprint $table) {     
-            $table->string('documento', 20)->primary();
-            $table->string('nombres', 50);
-            $table->string('apellidos', 50);
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->unsignedBigInteger('perfil_id');
+            $table->foreign('perfil_id')->references('id')->on('perfils')->onDelete('cascade');
         });
     }
 
@@ -28,8 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('personas', function (Blueprint $table) {
-            Schema::dropIfExists('personas');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['perfil_id']);
+            $table->dropColumn('perfil_id');
         });
     }
 };
