@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('nombre', 25);
             $table->string('url', 50);
             $table->string('icon', 50);
+            $table->string('short_name', 50);
             $table->timestamps();
         });
     }
