@@ -25,7 +25,6 @@ class AuthController extends Controller
             $persona = Persona::create([
                 'nombres' => $request->get('nombres'),
                 'apellidos' => $request->get('apellidos'),
-                'tipo'      => $request->get('type'),
                 'documento' => $request->get('documento')
             ]);
 
