@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Materia;
+use App\Models\Persona;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,7 +60,7 @@ class MateriaController extends Controller
     public function show($id)
     {
       try {
-        $materia = Materia::findOrFail($id);
+        $materia = Materia::findOrFail($id)->with('personas')->get();
         return response()->json([
           "data"      => $materia,
       ],  200);
@@ -109,4 +110,32 @@ class MateriaController extends Controller
     {
         //
     }
+
+    // buscar al alumno por medio de documento, nombres o apellidos
+    public function buscarEstudiante()
+    {
+        
+    }
+
+    public function agregarEstudiante($id, $estudianteId)
+    {
+        try {
+            DB::beginTransaction();
+
+            $persona = Persona::find($estudianteId);
+            if($persona->tipo !== 'STUDENT') {
+                return response()->json(['message' => "Debe ser una estudiante valido"], 409);
+            }
+
+            $materia = Materia::find($id);
+            $materia->personas()->attach($estudianteId, ['activo' => true]);
+            DB::commit();
+            return response()->json([ "message" => 'Estudiante asignado correctamente'],  200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json(['message' => $th->getMessage()], 409);
+        }
+    }
+
+    // poder eliminar un alumno de la materia
 }

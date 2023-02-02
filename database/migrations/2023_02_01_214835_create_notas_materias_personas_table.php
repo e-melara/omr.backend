@@ -33,7 +33,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('notas_materias_personas', function (Blueprint $table) {
-            //
+            Schema::dropIfExists('notas_materias_personas');
         });
     }
 };

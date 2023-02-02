@@ -12,7 +12,7 @@ class Persona extends Model
 
     public function usuario()
     {
-        return $this->hasOne(User::class,  'documento');
+        return $this->belongsTo(User::class,  'documento');
     }
 
     public function materias()
