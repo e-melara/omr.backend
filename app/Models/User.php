@@ -20,7 +20,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var string[]
      */
     protected $fillable = [
-        'password', 'documento'
+        'password', 'documento', 'perfil_id'
     ];
 
     /**
@@ -39,11 +39,26 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function getJWTCustomClaims()
     {
-        return [];
+        $perfil = $this->perfil;
+        $roles = array();
+        foreach ($perfil->roles as $value) {
+            array_push($roles, $value->nombre);
+        }
+
+        return [
+            "id"        => $this->id,
+            "roles"     => $roles,
+            "perfil"    => $perfil->nombre,
+        ];
     }
 
     public function persona()
     {
         return $this->belongsTo(Persona::class,  'documento');
+    }
+
+    public function perfil()
+    {
+        return $this->belongsTo(Perfil::class,  'perfil_id');
     }
 }

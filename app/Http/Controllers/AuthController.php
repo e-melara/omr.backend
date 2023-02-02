@@ -31,7 +31,8 @@ class AuthController extends Controller
 
             $usuario = User::create([
                 "password" =>  app('hash')->make($request->get('password')),
-                "documento" => $request->get('documento')
+                "documento" => $request->get('documento'),
+                "perfil_id" => $request->type === 'STUDENT' ? 3 : 2,
             ]);
             $persona->usuario()->associate($usuario);
 
@@ -56,7 +57,7 @@ class AuthController extends Controller
         $credentials = $request->only(['documento', 'password']);
         $token = Auth::setTTL(7200)->attempt($credentials);
         if (!$token) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'El usuario o contraseña no es la corecta'], 401);
         }
 
         $user = Auth::user();
