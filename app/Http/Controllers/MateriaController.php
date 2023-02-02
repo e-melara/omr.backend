@@ -112,9 +112,20 @@ class MateriaController extends Controller
     }
 
     // buscar al alumno por medio de documento, nombres o apellidos
-    public function buscarEstudiante()
+    public function buscarEstudiante(Request $request)
     {
-        
+        $this->validate($request, [
+            'q' => 'required|string',
+        ]);
+
+        $query = $request->get('q');
+
+        $personas = Persona::where('documento', 'ilike', '%'.$query.'%')
+            ->OrWhere('nombres', 'ilike', '%'.$query.'%')
+            ->OrWhere('apellidos', 'ilike', '%'.$query.'%')
+            ->get();
+
+            return response()->json([ "data" => $personas],  200);
     }
 
     public function agregarEstudiante($id, $estudianteId)

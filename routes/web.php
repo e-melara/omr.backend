@@ -19,7 +19,6 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix' => 'api'], function() use ($router) {
     $router->group(['prefix' => 'materias'], function() use ($router) {
-        $router->post('/{id}/estudiante/{estudianteId}', 'MateriaController@agregarEstudiante');
 
         $router->post('/create', 'MateriaController@store');
         $router->get('/{id}', 'MateriaController@show');
@@ -27,7 +26,8 @@ $router->group(['prefix' => 'api'], function() use ($router) {
         $router->post('/create', 'MateriaController@store');
 
         // administrar los estudiantes por las materias
-        //$router->get('/search', 'MateriaController@buscarEstudiante');
+        $router->get('/search', 'MateriaController@buscarEstudiante');
+        $router->post('/{id}/estudiante/{estudianteId}', 'MateriaController@agregarEstudiante');
     });
 });
 
