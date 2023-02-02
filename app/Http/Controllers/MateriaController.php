@@ -17,8 +17,8 @@ class MateriaController extends Controller
      */
     public function index(Request $request) :  JsonResponse
     {
-        $paginate = Materia::paginate(5);
-        return response()->json($paginate,  200);
+        $paginate = Materia::paginate($request->get('per_page'));
+        return response()->json( $paginate,  200);
     }
 
     /**
@@ -60,12 +60,12 @@ class MateriaController extends Controller
     public function show($id)
     {
       try {
-        $materia = Materia::findOrFail($id)->with('personas')->get();
+        $materia = Materia::where('id', $id)->with('personas')->first();
         return response()->json([
           "data"      => $materia,
       ],  200);
       } catch (\Throwable $th) {
-        return response()->json(['message' => $th->getMessage()], 409);
+        return response()->json(['message' => $th->getMessage()], 404);
       }
     }
 
@@ -120,12 +120,16 @@ class MateriaController extends Controller
 
         $query = $request->get('q');
 
-        $personas = Persona::where('documento', 'ilike', '%'.$query.'%')
-            ->OrWhere('nombres', 'ilike', '%'.$query.'%')
-            ->OrWhere('apellidos', 'ilike', '%'.$query.'%')
+        $estudiantes = DB::table('users')
+            ->join('personas', 'users.documento', '=',  'personas.documento')
+            ->Orwhere('personas.documento', 'ilike', '%'.$query.'%')
+            ->OrWhere('personas.nombres', 'ilike', '%'.$query.'%')
+            ->OrWhere('personas.apellidos', 'ilike', '%'.$query.'%')            
+            ->where('users.perfil_id', 3)
+            ->select('personas.nombres',  'personas.apellidos', 'personas.documento')
             ->get();
 
-            return response()->json([ "data" => $personas],  200);
+            return response()->json([ "data" => $estudiantes],  200);
     }
 
     public function agregarEstudiante($id, $estudianteId)

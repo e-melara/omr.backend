@@ -24,10 +24,10 @@ $router->group(['prefix' => 'api'], function() use ($router) {
     
     $router->group(['prefix' => 'materias'], function() use ($router) {        
         // administrar los estudiantes por las materias
+        $router->get('/', 'MateriaController@index');
         $router->get('/search', 'MateriaController@buscarEstudiante');
         $router->post('/{id}/estudiante/{estudianteId}', 'MateriaController@agregarEstudiante');
 
-        $router->get('/', 'MateriaController@index');
         $router->post('/create', 'MateriaController@store');
         $router->get('/{id}', 'MateriaController@show');
         $router->put('/{id}', 'MateriaController@update');
@@ -35,6 +35,7 @@ $router->group(['prefix' => 'api'], function() use ($router) {
     });
 
     $router->group(['prefix' => 'estudiante'], function() use ($router) {
+        $router->get('/', 'EstudianteController@index');
         $router->get('/{documento}', 'EstudianteController@show');
     });
 });
